@@ -1,0 +1,215 @@
+---
+title: "Jane Austen: Emma"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+---
+
+
+```{r}
+  source("./text-functions.R")
+
+  # Get example data
+  library(janeaustenr)
+  df <- austen_books() %>% filter(book == "Emma") %>% sample_n(5000)
+```
+
+
+
+All Comments
+=====================================
+
+```{r}
+  text_dtm <- generate_dtm_from_df(df, "text")
+  text <- text_dtm$text
+  dtm <- text_dtm$dtm
+  
+```
+
+
+Row
+-------------------------------------
+
+### Wordcloud
+
+```{r}
+  display_wordcloud(dtm, 10)
+```
+
+
+### Top word associations
+  
+```{r}
+  generate_graph(text, dtm, 20, static = F, bigrams = F, filter_nodes = F)
+```   
+
+
+
+
+Row
+-------------------------------------
+
+
+### Example comments
+
+```{r}
+  text %>% sample_n(20) %>% DT::datatable()
+```  
+
+
+
+
+
+```{r}
+  k <- 3 
+  lda <- LDA(dtm, k)
+  text['topic'] <- get_top_topic(lda)
+```
+
+
+
+
+Topic 1
+=====================================
+
+```{r}
+  i <- 1
+
+  topic_rows <- text %>% 
+                  rownames_to_column("row") %>%
+                  filter(topic == i) %>%
+                  pull(row) %>%
+                  as.numeric()
+  
+  text_topic <- text[topic_rows,] %>% pull(1)
+  dtm_topic <- dtm[topic_rows,]
+
+```
+
+
+Row
+-------------------------------------
+  
+
+### Wordcloud
+
+```{r}
+  display_wordcloud(dtm_topic, 10)
+```
+
+
+### Top word associations
+  
+```{r}
+  generate_graph(text_topic, dtm_topic, 10, static = F, bigrams = F, filter_nodes = F)
+```   
+
+
+
+Row
+-------------------------------------
+
+  
+### Example comments
+  
+```{r}
+  DT::datatable(get_top_comments(lda, i, text, 20))
+```  
+
+
+
+Topic 2
+=====================================
+
+```{r}
+  i <- 2
+
+  topic_rows <- text %>% 
+                  rownames_to_column("row") %>%
+                  filter(topic == i) %>%
+                  pull(row) %>%
+                  as.numeric()
+  
+  text_topic <- text[topic_rows,] %>% pull(1)
+  dtm_topic <- dtm[topic_rows,]
+
+```
+
+
+Row
+-------------------------------------
+
+
+### Wordcloud
+
+```{r}
+  display_wordcloud(dtm_topic, 10)
+```
+
+
+### Top word associations
+  
+```{r}
+  generate_graph(text_topic, dtm_topic, 10, static = F, bigrams = F, filter_nodes = F)
+```   
+
+
+
+Row
+-------------------------------------
+
+### Example comments
+  
+```{r}
+  DT::datatable(get_top_comments(lda, i, text, 20))
+```  
+
+
+
+
+Topic 3
+=====================================
+
+```{r}
+  i <- 3
+
+  topic_rows <- text %>% 
+                  rownames_to_column("row") %>%
+                  filter(topic == i) %>%
+                  pull(row) %>%
+                  as.numeric()
+  
+  text_topic <- text[topic_rows,] %>% pull(1)
+  dtm_topic <- dtm[topic_rows,]
+  
+```
+
+
+Row
+-------------------------------------
+
+
+### Wordcloud
+
+```{r}
+  display_wordcloud(dtm_topic, 10)
+```
+
+
+### Top word associations
+  
+```{r}
+  generate_graph(text_topic, dtm_topic, 10, static = F, bigrams = F, filter_nodes = F)
+```   
+
+
+
+Row
+-------------------------------------
+  
+
+### Example comments
+  
+```{r}
+  DT::datatable(get_top_comments(lda, i, text, 20))
+```  
