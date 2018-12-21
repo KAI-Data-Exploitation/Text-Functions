@@ -72,7 +72,7 @@ generate_dtm_from_df <- function(df, column){
   # Clean the text, create a document-term-matrix and remove blank elements
   #
   # Inputs:
-  #   df: dataframe containing text
+  #   df: dataframe tibble containing text
   #   column: name of column of interest
   #
   # Outputs:
